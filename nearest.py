@@ -1,11 +1,47 @@
+# KNN working flow :-
+# Loop through all the test points and calculate the distance between each test point with all the
+# train points. Create a dictionary which keeps track of all the distances calculated. Variate k to
+# find the best accuracy.
+
+# We used the np.linalg.norm() function to calculate the distance which also normalizes the data.
+# We tried various distance functions – Euclidean, Manhattan,etc but Euclidean distance gave the
+# best result so we tried to optimize this further.
+#
+# Limitations : -
+# Computation time. It is taking around 20-30 mins just to calculate all the possible distances
+# and then compute the predicted class of the test point. We checked the different between the
+# accuracies given by normalized as well as unnormalized data and it was around the same.
+# Normalized data is a little faster for computation.
+# Getting an accuracy of 64 when k is 77
+
+
+#   K               Accuracy
+#   3                   59
+#   5                   61
+#   31                  61.18
+#   77                  64.79
+#   91                  64.79
+#
+#
+
+# Computation takes around 20 mins.
+
+
+
 import numpy as np
 import operator
+from operator import itemgetter
+from collections import Counter
+import cPickle
+
 
 
 ACTUAL = 0
 DATA = 1
 PREDICTED = 2
 
+#number of k
+k = 5
 
 def get_distance(a, b):
     return np.linalg.norm(a-b)
@@ -23,7 +59,8 @@ def nearest_knn(train_data, test_data):
             for degree_key in train_data[train_key][DATA]:
                 value = train_data[train_key][DATA][degree_key]
                 dist = get_distance(value, test_value)
-                if len(temp_dist) <= 10:
+                #Find k neighbours
+                if len(temp_dist) <= k:
                     temp_dist.append((dist, degree_key, train_key))
                     sorted(temp_dist, key=operator.itemgetter(0))
                 else:
@@ -33,16 +70,20 @@ def nearest_knn(train_data, test_data):
                         temp_dist.pop()
         distances[test_key] = temp_dist
 
-    vote = dict()
+    # with open('distances_k-250.pickle', 'w') as f:  # Python 3: open(..., 'wb')
+    #     cPickle.dump(distances, f)
+
+
+
+    # with open('distances_k-250.pickle') as g:
+    #     distances = cPickle.load(g)
+
     result = []
     for test_key in distances:
-        each_vote = dict()
-        for value in distances[test_key]:
-            if value[1] in each_vote:
-                each_vote[value[1]] += 1
-            else:
-                each_vote[value[1]] = 1
-        vote[test_key] = max(each_vote.iteritems(), key=operator.itemgetter(
-            1))[0]
-        result.append((vote[test_key], test_data[test_key][DATA].keys()[0]))
+        temp = distances.get(test_key)
+        temp.sort(key=itemgetter(0))
+        temp = temp[:k]
+        predicted_key = Counter(map(itemgetter(1), temp)).most_common(1)[0][0]
+        result.append((test_data[test_key][DATA].keys()[0], predicted_key))
+
     return result
