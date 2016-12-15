@@ -43,7 +43,7 @@ def main():
     elif mode == "adaboost":
         ada_boost(train_data, test_data, int(sys.argv[4]))
     elif mode == "nnet":
-        neural_nets(train_data, test_data, int(sys.argv[4]))
+        calculate_accuracy(neural_nets(train_data, test_data, int(sys.argv[4])))
 
 
 if __name__ == "__main__":
