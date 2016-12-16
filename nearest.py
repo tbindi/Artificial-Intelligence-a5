@@ -1,10 +1,10 @@
 # KNN working flow :-
 # Loop through all the test points and calculate the distance between each test point with all the
 # train points. Create a dictionary which keeps track of all the distances calculated. Variate k to
-# find the best accuracy.
-
+# find the best accuracy
 # We used the np.linalg.norm() function to calculate the distance which also normalizes the data.
-# We tried various distance functions – Euclidean, Manhattan,etc but Euclidean distance gave the
+# We tried various distance functions  Euclidean, Manhattan,etc but
+# Euclidean distance gave the
 # best result so we tried to optimize this further.
 #
 # Limitations : -
@@ -13,8 +13,6 @@
 # accuracies given by normalized as well as unnormalized data and it was around the same.
 # Normalized data is a little faster for computation.
 # Getting an accuracy of 64 when k is 77
-
-
 #   K               Accuracy
 #   3                   59
 #   5                   61

@@ -18,14 +18,6 @@ def calculate_accuracy(output):
     print "Accuracy : ", (count * 1.0) / (len(output) * 1.0)
 
 
-def get_normal(array):
-    min_ = np.amin(array)
-    max_ = np.amax(array)
-    for i in range(len(array)):
-        array[i] = (array[i] - min_)*1.0 / (max_ - min_)
-    return array
-
-
 # returns the following data structure.
 # { photoID: { DATA:{0: [], 90: [], 180: [], 270: [] }, PREDICTED: None }
 def populate_data(file_name):
@@ -38,9 +30,8 @@ def populate_data(file_name):
             input_[line[0]][DATA] = dict()
             input_[line[0]][PREDICTED] = None
         degree = int(line[1])
-        input_[line[0]][DATA][degree] = get_normal(np.array([int(j) for j in
-                                                             line[2:]],
-                                                            dtype=float))
+        input_[line[0]][DATA][degree] = np.array([int(j) for j in line[2:]],
+                                                 dtype=float)
     return input_
 
 

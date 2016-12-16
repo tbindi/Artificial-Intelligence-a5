@@ -36,12 +36,18 @@ ACTUAL = 0
 DATA = 1
 
 
+def get_normal(array):
+    for i in range(len(array)):
+        array[i] = (array[i]) / sum(array)
+    return array
+
+
 def sigmoid(x):
     return 1.0 / (1.0 + math.exp(-1.0 * x))
 
 
 def get_random():
-    return random.uniform(0, 1)
+    return random.uniform(0.001, 0.009)
 
 
 def out_derivative(out):
@@ -71,7 +77,8 @@ class Neuron:
         self.constant = 0.01
 
     def activation(self, input_, index):
-        return sum([i*j for i, j in zip(input_, self.weights_layer[index])])
+        return sum([sigmoid(i)*j for i, j in zip(input_, self.weights_layer[
+            index])])
 
     def get_output(self, input_, neuron_index):
         sum_ = 0.0
@@ -109,8 +116,10 @@ class Neuron:
             index = output_layer.index(neuron)
             if index * 90 == degree:
                 errors.append(1 - neuron["OUTPUT"])
+                neuron["OUTPUT"] = 1 - neuron["OUTPUT"]
             else:
                 errors.append(0 - neuron["OUTPUT"])
+                neuron["OUTPUT"] = 0 - neuron["OUTPUT"]
         output_layer = get_delta(output_layer, errors)
         errors = []
         # Hidden Layer Delta Calculation
@@ -142,7 +151,7 @@ def neural_nets(train_data, test_data, hidden_count):
     p.initialize_network(hidden_count)
     for row in train_data:
         for degree in [0, 90, 180, 270]:
-            input_row = train_data[row][DATA][degree]
+            input_row = get_normal(train_data[row][DATA][degree])
             output_layer, hidden_layer = p.feed_forward(hidden_count, input_row)
             output_layer, hidden_layer = p.backward_propagate(hidden_layer,
                                                          output_layer, degree)
@@ -150,7 +159,7 @@ def neural_nets(train_data, test_data, hidden_count):
     result = []
     for row in test_data:
         degree = test_data[row][DATA].keys()[0]
-        test_row = test_data[row][DATA].values()[0]
+        test_row = get_normal(test_data[row][DATA].values()[0])
         out_, hidden_ = p.feed_forward(hidden_count, test_row)
         print "PREDICTED:", get_result(out_), " ACTUAL:", degree, " ", out_
         result.append((degree, get_result(out_)))
