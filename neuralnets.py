@@ -157,10 +157,11 @@ def neural_nets(train_data, test_data, hidden_count):
                                                          output_layer, degree)
             p.update_weights(hidden_layer, output_layer, input_row)
     result = []
+    keys = []
     for row in test_data:
         degree = test_data[row][DATA].keys()[0]
         test_row = get_normal(test_data[row][DATA].values()[0])
         out_, hidden_ = p.feed_forward(hidden_count, test_row)
-        print "PREDICTED:", get_result(out_), " ACTUAL:", degree, " ", out_
         result.append((degree, get_result(out_)))
-    return result
+        keys.append(row)
+    return result, keys

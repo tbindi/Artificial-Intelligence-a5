@@ -77,11 +77,12 @@ def nearest_knn(train_data, test_data):
     #     distances = cPickle.load(g)
 
     result = []
+    keys = []
     for test_key in distances:
         temp = distances.get(test_key)
         temp.sort(key=itemgetter(0))
         temp = temp[:k]
         predicted_key = Counter(map(itemgetter(1), temp)).most_common(1)[0][0]
-        result.append((test_data[test_key][DATA].keys()[0], predicted_key))
-
-    return result
+        result.append([test_data[test_key][DATA].keys()[0], predicted_key])
+        keys.append(test_key)
+    return result, keys
