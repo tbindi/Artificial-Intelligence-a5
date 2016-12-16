@@ -101,6 +101,7 @@ def init_confusion_row():
 
 def test_and_classify(test_data, final_ensemble_dict):
 
+    adaboost_file = open("adaboost_output.txt", 'w')
     confusion_matrix = dict()
     for degree in [0,90,180,270]:
         confusion_matrix[degree] = init_confusion_row()
@@ -123,12 +124,14 @@ def test_and_classify(test_data, final_ensemble_dict):
                     # else:
                     #     image_prediction_dict[file][degree][orient] -= weight
             prediction_list = sorted(image_prediction_dict[file][degree].items(), key=operator.itemgetter(1), reverse=True)
+            adaboost_file.write(file+" "+str(prediction_list[0][0])+"\n")
             if prediction_list[0][0] == degree:
                 true_prediction_count += 1
             else:
                 false_prediction_count += 1
             confusion_matrix[degree][prediction_list[0][0]] += 1
 
+    adaboost_file.close()
     print("Accuracy:")
     print(float(true_prediction_count)/(true_prediction_count+false_prediction_count))
     print("Confusion Matrix:")
