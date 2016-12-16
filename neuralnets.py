@@ -1,3 +1,32 @@
+"""
+
+Steps involved:
+
+1. Train the network:
+    a. Initialize network: Build a neural network with the hidden neuron count.
+    b. Forward Propagation: This calculates the output of each neuron in each layer as a sum of weights * inputs for that neuron.
+    c. Back Propagation: This is a way in which the error at each layer is calculated for each neuron.
+    d. Update Weights: This is calculated considering the learning rate, delta value and the previous received at each layer and neuron.
+    d. Activation: Calculation of a output which quantifies the value at that position.
+
+2. Predict the data:
+    Taking the test data and running it using the forward propagation will give a output value at the end.
+    The output neuron for a class which throws the maximum probability is the predicted class for the data row.
+
+
+Explanation of different functions:
+
+Sigmoid function: 1.0 / (1.0 + math.exp(-1.0 * x))
+Activation funtion: sum of weight * input
+Transfer Derivative:  output * (1.0 - output)
+Error function: for output layer: (expected_output - actual_output) * transfer_derivative,
+                for hidden layer: (weight*error)*transfer_derivative.
+learning rate: It is a parameter which controls how much faster the weights can converge onto the final set.
+
+
+"""
+
+
 import random
 import math
 import numpy as np
@@ -95,13 +124,14 @@ class Neuron:
         return output_layer, hidden_layer
 
     def update_weights(self, hidden_layer, output_layer, train_row):
+        learning_rate = 0.05
         for neuron_index in range(len(hidden_layer)):
             for input_index in range(len(self.weights_layer[neuron_index])):
-                self.weights_layer[neuron_index][input_index] += 0.0004 * \
+                self.weights_layer[neuron_index][input_index] += learning_rate * \
                                                                  hidden_layer[neuron_index]["DELTA"] * train_row[input_index]
         for neuron_index in range(len(output_layer)):
             for input_index in range(len(self.weights_output[neuron_index])):
-                self.weights_output[neuron_index][input_index] += 0.0004 * \
+                self.weights_output[neuron_index][input_index] += learning_rate * \
                                                                   output_layer[neuron_index]["DELTA"] * hidden_layer[input_index]["OUTPUT"]
 
 
