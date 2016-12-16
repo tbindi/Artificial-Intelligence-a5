@@ -1,3 +1,22 @@
+"""
+This implementation of Adaboost uses Decision stumps as classifiers. We select the best of out of 10 decision stumps
+based on which gives least error rate for each stump that needs to selected. This is done by selecting 2 random indexes(index1 and index2).
+It is positive if value at index1 > value at index2 and negative otherwise. Each classifier is weighed based on the perfomance it
+gave(based on error rate). Lesser the error rate more its weight. Finally, the adaboost outputs a list of classifiers for each class,
+with a corresponding weight for each of them.
+
+alpha calculation:
+
+alpha = 1/2 ln((1 - err)/err)
+
+data = data*e^alpha for misclassified
+data = data*e^-alpha for correctly classified
+
+final_ensemble_dict contains the list of classifiers for each degree/orientation with the index details.
+test_and_classify() uses this final_ensemble_dict to check what is the majority weight to assign a class for each.
+
+"""
+
 import numpy as np
 import random
 import operator
